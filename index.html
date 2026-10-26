@@ -268,7 +268,7 @@
 
     <div class="video-container">
         <!-- El video se reproduce automáticamente sin sonido (muted) para no interrumpir la canción -->
-        <video src="video_novios.mp4" autoplay loop muted playsinline controls></video>
+        <video id="video-novios" src="video_novios.mp4" loop muted playsinline></video>
     </div>
 
     <div class="galeria">
@@ -299,6 +299,7 @@
         function abrirInvitacion() {
             const pantalla = document.getElementById("pantalla-apertura");
             const btnMusica = document.getElementById("music-btn");
+            const video = document.getElementById("video-novios");
             
             // Animación de deslizar hacia arriba
             pantalla.style.transform = "translateY(-100%)";
@@ -310,6 +311,7 @@
 
             // Iniciar música de Bryan Adams
             audio.play();
+            video.play();
             musicaSonando = true;
             btnMusica.style.display = "block";
         }
