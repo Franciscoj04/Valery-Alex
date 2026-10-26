@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="Save the Date | Alexander & Valery">
+    <meta property="og:description" content="05 de Diciembre 2026. ¡Reserva la fecha!">
+    <meta property="og:image" content="TU_IMAGEN_DE_PORTADA.jpg">
+    <title>Save the Date | Alexander & Valery</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Great+Vibes&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Paleta de Otoño */
+            --cafe-claro: #B88C64;
+            --borgona: #7A3045;
+            --terracota: #B75D3E;
+            --mostaza: #C7943D;
+            --verde-oliva: #556B2F;
+            --verde-oscuro: #2F4F2F;
+            --bg-crema: #FAF7F2;
+            --color-texto: #3E332B;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-crema);
+            color: var(--color-texto);
+            text-align: center;
+            overflow-x: hidden;
+        }
+
+        /* --- PANTALLA DE APERTURA (EL SOBRE) --- */
+        #pantalla-apertura {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100vh;
+            background-color: var(--verde-oscuro);
+            color: var(--bg-crema);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+            cursor: pointer;
+        }
+
+        #pantalla-apertura h1 {
+            font-size: 4rem;
+            margin-bottom: 10px;
+            color: var(--bg-crema);
+        }
+
+        .btn-abrir {
+            background-color: var(--terracota);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 2px;
+            border-radius: 30px;
+            margin-top: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            animation: latido 2s infinite;
+        }
+
+        @keyframes latido {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* --- BOTÓN DE MÚSICA FLOTANTE --- */
+        #music-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--mostaza);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 20px;
+            z-index: 1000;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            display: none;
+        }
+
+        /* --- CONTENIDO DEL SAVE THE DATE --- */
+        .header {
+            padding: 50px 20px 20px;
+        }
+
+        .header h3 {
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 5px;
+            font-size: 1rem;
+            color: var(--verde-oliva);
+            text-transform: uppercase;
+        }
+
+        .nombres-script {
+            font-family: 'Great Vibes', cursive;
+            font-size: 4.5rem;
+            color: var(--terracota);
+            margin: 10px 0;
+            line-height: 1;
+            font-weight: normal;
+        }
+
+        .fecha {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--borgona);
+            margin-bottom: 40px;
+        }
+
+        /* --- VIDEO --- */
+        .video-container {
+            max-width: 400px;
+            margin: 0 auto 40px;
+            padding: 0 20px;
+        }
+
+        .video-container video {
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(122, 48, 69, 0.15);
+            border: 4px solid white;
+        }
+
+        /* --- FOTOS --- */
+        .galeria {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 0 20px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+        }
+
+        .polaroid {
+            background: white;
+            padding: 10px 10px 30px 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            width: 140px;
+            transform: rotate(-3deg);
+            border: 1px solid #eaeaea;
+        }
+        
+        .polaroid:nth-child(even) {
+            transform: rotate(4deg);
+        }
+
+        .polaroid img {
+            width: 100%;
+            height: auto;
+            border-radius: 2px;
+        }
+
+        /* --- CONTADOR --- */
+        .seccion-contador {
+            background-color: var(--verde-oscuro);
+            color: var(--bg-crema);
+            padding: 60px 20px;
+        }
+
+        .seccion-contador h2 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            font-weight: normal;
+        }
+
+        .timer-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .timer-box {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--mostaza);
+            padding: 15px;
+            border-radius: 10px;
+            min-width: 65px;
+        }
+
+        .timer-box span { 
+            font-size: 2.2rem; 
+            font-family: 'Cormorant Garamond', serif; 
+            display: block; 
+        }
+
+        .timer-box small { 
+            font-size: 0.7rem; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            color: var(--cafe-claro);
+        }
+
+        .aviso {
+            font-style: italic;
+            margin-top: 40px;
+            font-size: 0.9rem;
+            color: #d1d1d1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- REPRODUCTOR DE AUDIO -->
+    <audio id="musica-fondo" loop>
+        <source src="heaven.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- EL SOBRE (PANTALLA INICIAL) -->
+    <div id="pantalla-apertura" onclick="abrirInvitacion()">
+        <p style="letter-spacing: 4px; font-size: 0.9rem; margin-bottom: 0;">SAVE THE DATE</p>
+        <h1 class="nombres-script">Alexander & Valery</h1>
+        <button class="btn-abrir">ABRIR</button>
+    </div>
+
+    <!-- BOTÓN DE MÚSICA FLOTANTE -->
+    <button id="music-btn" onclick="toggleMusica()">🎵</button>
+
+    <!-- CONTENIDO DEL SAVE THE DATE -->
+    <div class="header">
+        <h3>Save the Date</h3>
+        <h1 class="nombres-script">Alexander <br><span style="font-size: 2.5rem; color: var(--cafe-claro);">&</span><br> Valery</h1>
+        <div class="fecha">05 . 12 . 2026</div>
+    </div>
+
+    <div class="video-container">
+        <!-- El video se reproduce automáticamente sin sonido (muted) para no interrumpir la canción -->
+        <video src="video_novios.mp4" autoplay loop muted playsinline controls></video>
+    </div>
+
+    <div class="galeria">
+        <div class="polaroid">
+            <img src="foto1.jpg" alt="Nosotros 1">
+        </div>
+        <div class="polaroid">
+            <img src="foto2.jpg" alt="Nosotros 2">
+        </div>
+    </div>
+
+    <div class="seccion-contador">
+        <h2>Ya casi llega el gran día...</h2>
+        <div class="timer-container">
+            <div class="timer-box"><span id="dias">00</span><small>Días</small></div>
+            <div class="timer-box"><span id="horas">00</span><small>Hrs</small></div>
+            <div class="timer-box"><span id="min">00</span><small>Min</small></div>
+            <div class="timer-box"><span id="seg">00</span><small>Seg</small></div>
+        </div>
+        <div class="aviso">La invitación formal y los detalles del evento serán enviados más adelante.</div>
+    </div>
+
+    <script>
+        // CONTROL DE LA MÚSICA Y EL SOBRE
+        const audio = document.getElementById("musica-fondo");
+        let musicaSonando = false;
+
+        function abrirInvitacion() {
+            const pantalla = document.getElementById("pantalla-apertura");
+            const btnMusica = document.getElementById("music-btn");
+            
+            // Animación de deslizar hacia arriba
+            pantalla.style.transform = "translateY(-100%)";
+            pantalla.style.opacity = "0";
+            
+            setTimeout(() => {
+                pantalla.style.display = "none";
+            }, 1000);
+
+            // Iniciar música de Bryan Adams
+            audio.play();
+            musicaSonando = true;
+            btnMusica.style.display = "block";
+        }
+
+        function toggleMusica() {
+            const btn = document.getElementById("music-btn");
+            if(musicaSonando) {
+                audio.pause();
+                btn.innerHTML = "🔇";
+                musicaSonando = false;
+            } else {
+                audio.play();
+                btn.innerHTML = "🎵";
+                musicaSonando = true;
+            }
+        }
+
+        // CONTROL DEL CONTADOR (05 de Diciembre 2026)
+        const fechaBoda = new Date("Dec 05, 2026 17:30:00").getTime();
+
+        setInterval(function() {
+            const ahora = new Date().getTime();
+            const distancia = fechaBoda - ahora;
+
+            if(distancia < 0) return;
+
+            const dias = Math.floor(distancia / (1000 * 60 * 60 * 24));
+            const horas = Math.floor((distancia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutos = Math.floor((distancia % (1000 * 60 * 60)) / (1000 * 60));
+            const segundos = Math.floor((distancia % (1000 * 60)) / 1000);
+
+            document.getElementById("dias").innerHTML = dias < 10 ? "0"+dias : dias;
+            document.getElementById("horas").innerHTML = horas < 10 ? "0"+horas : horas;
+            document.getElementById("min").innerHTML = minutos < 10 ? "0"+minutos : minutos;
+            document.getElementById("seg").innerHTML = segundos < 10 ? "0"+segundos : segundos;
+        }, 1000);
+    </script>
+</body>
+</html>
