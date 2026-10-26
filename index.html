@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta property="og:title" content="Save the Date | Alexander & Valery">
     <meta property="og:description" content="05 de Diciembre 2026. ¡Reserva la fecha!">
-    <meta property="og:image" content="TU_IMAGEN_DE_PORTADA.jpg">
+    <meta property="og:image" content="portada.jpg">
     <title>Save the Date | Alexander & Valery</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -214,6 +214,23 @@
             margin-top: 40px;
             font-size: 0.9rem;
             color: #d1d1d1;
+        }
+
+        /* --- ADAPTACIÓN PARA MÓVILES --- */
+        @media (max-width: 600px) {
+            /* Ajusta el tamaño de la tipografía principal */
+            .nombres-script { font-size: 3rem; }
+            #pantalla-apertura h1 { font-size: 2.5rem; }
+            .fecha { font-size: 1.4rem; }
+            
+            /* Reduce el tamaño de las fotos para que quepan bien */
+            .polaroid { width: 110px; padding: 8px 8px 24px 8px; }
+            .galeria { gap: 10px; }
+
+            /* Ajusta los cuadros del contador para evitar que se salgan de la pantalla */
+            .timer-container { gap: 8px; flex-wrap: wrap; }
+            .timer-box { min-width: 55px; padding: 10px; }
+            .timer-box span { font-size: 1.5rem; }
         }
     </style>
 </head>
