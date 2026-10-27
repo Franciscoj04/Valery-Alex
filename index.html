@@ -365,26 +365,26 @@
             </p>
             <p id="texto-pases" style="font-family: 'Montserrat', sans-serif; font-size: 0.9rem; font-weight: 600; color: var(--mostaza); margin-bottom: 20px;"></p>
             
-            <form name="confirmacion-boda" method="POST" data-netlify="true" class="formulario-boda">
+            <form name="confirmacion-boda" id="form-boda" method="POST" data-netlify="true" class="formulario-boda">
                 
-                <!-- 1. Nombre de la persona principal (Siempre visible) -->
-                <input type="text" name="nombre_principal" placeholder="Tu nombre y apellido" required>
+                <!-- 1. Nombre principal -->
+                <input type="text" name="nombre_principal" id="nombre_principal" placeholder="Tu nombre y apellido" required>
                 
                 <input type="tel" name="whatsapp" placeholder="Tu número de WhatsApp" required>
                 
-                <!-- 2. Pregunta de asistencia -->
+                <!-- 2. Asistencia -->
                 <select name="asistencia" id="select-asistencia" required onchange="togglePases()">
                     <option value="" disabled selected>¿Podrás acompañarnos?</option>
                     <option value="Si">¡Sí, ahí estaré!</option>
                     <option value="No">Lo siento mucho, no podré asistir</option>
                 </select>
 
-                <!-- 3. Se muestra solo si dice que "Sí" y tiene más de 1 pase -->
+                <!-- 3. Cantidad de asistentes -->
                 <select name="numero_asistentes" id="select-personas" style="display:none;" onchange="generarCamposNombres()">
                     <option value="" disabled selected>¿Cuántos asistirán en total?</option>
                 </select>
 
-                <!-- 4. Contenedor de nombres de acompañantes oculto por defecto -->
+                <!-- 4. Acompañantes -->
                 <div id="contenedor-nombres" style="display: none; width: 100%;">
                     <input type="text" name="persona_2" id="persona_2" placeholder="Nombre del acompañante 1" style="display:none; margin-top: 15px;">
                     <input type="text" name="persona_3" id="persona_3" placeholder="Nombre del acompañante 2" style="display:none; margin-top: 15px;">
@@ -392,8 +392,14 @@
                     <input type="text" name="persona_5" id="persona_5" placeholder="Nombre del acompañante 4" style="display:none; margin-top: 15px;">
                 </div>
 
-                <button type="submit" class="btn-enviar">ENVIAR CONFIRMACIÓN</button>
+                <button type="submit" id="btn-enviar-submit" class="btn-enviar">ENVIAR CONFIRMACIÓN</button>
             </form>
+
+            <!-- MENSAJE DE ÉXITO (Oculto por defecto) -->
+            <div id="mensaje-exito" style="display: none; margin-top: 20px; padding: 20px; background-color: var(--verde-oscuro); color: var(--bg-crema); border-radius: 10px;">
+                <h3 class="nombres-script" style="font-size: 2.5rem; color: var(--mostaza); margin: 0 0 10px 0;">¡Gracias por confirmar!</h3>
+                <p style="font-family: 'Montserrat', sans-serif; font-size: 0.95rem; margin: 0;">Hemos guardado tu respuesta. ¡Nos vemos el 05 de diciembre!</p>
+            </div>
         </div>
     </div>
 
@@ -558,6 +564,39 @@
         function mostrarFormulario() {
             document.getElementById('btn-mostrar-form').style.display = 'none';
             document.getElementById('contenedor-formulario').style.display = 'block';
+        }
+
+        // Capturar el envío del formulario mediante AJAX
+        const miFormulario = document.getElementById("form-boda");
+
+        if (miFormulario) {
+            miFormulario.addEventListener("submit", function(e) {
+                e.preventDefault(); // Evita que la página se recargue o se quede en blanco
+
+                const btnSubmit = document.getElementById("btn-enviar-submit");
+                btnSubmit.innerText = "ENVIANDO...";
+                btnSubmit.disabled = true;
+
+                const formData = new FormData(miFormulario);
+
+                // Enviar datos en segundo plano a Netlify
+                fetch("/", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-parse-urlencoded" },
+                    body: new URLSearchParams(formData).toString()
+                })
+                .then(() => {
+                    // Ocultar formulario y mostrar mensaje de agradecimiento
+                    miFormulario.style.display = "none";
+                    document.getElementById("texto-pases").style.display = "none";
+                    document.getElementById("mensaje-exito").style.display = "block";
+                })
+                .catch((error) => {
+                    alert("Ocurrió un error al enviar tu confirmación. Inténtalo de nuevo.");
+                    btnSubmit.innerText = "ENVIAR CONFIRMACIÓN";
+                    btnSubmit.disabled = false;
+                });
+            });
         }
     </script>
 </body>
