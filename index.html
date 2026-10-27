@@ -145,6 +145,7 @@
             border-radius: 15px;
             box-shadow: 0 10px 20px rgba(122, 48, 69, 0.15);
             border: 4px solid white;
+            cursor: pointer; /* NUEVO: Indica que se puede tocar */
         }
 
         /* --- FOTOS --- */
@@ -269,7 +270,7 @@
     <div class="video-container">
         <!-- El video se reproduce automáticamente sin sonido (muted) para no interrumpir la canción -->
          <p style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.1rem; color: var(--terracota); margin-bottom: 10px; padding: 0 20px;">
-            Sube el volumen y acompáñanos hasta el final de este recuerdo...
+            Toca el video para verlo en pantalla completa y vive este recuerdo con nosotros...
         </p>
         <video id="video-novios" src="video_novios.mp4" loop muted playsinline></video>
     </div>
@@ -351,6 +352,18 @@
             document.getElementById("min").innerHTML = minutos < 10 ? "0"+minutos : minutos;
             document.getElementById("seg").innerHTML = segundos < 10 ? "0"+segundos : segundos;
         }, 1000);
+
+        const videoActivo = document.getElementById("video-novios");
+
+        videoActivo.addEventListener('click', () => {
+            if (videoActivo.requestFullscreen) {
+                videoActivo.requestFullscreen(); // Android y PC
+            } else if (videoActivo.webkitEnterFullscreen) { 
+                videoActivo.webkitEnterFullscreen(); // iOS / iPhone
+            } else if (videoActivo.webkitRequestFullscreen) { 
+                videoActivo.webkitRequestFullscreen(); // Safari PC
+            }
+        });
     </script>
 </body>
 </html>
