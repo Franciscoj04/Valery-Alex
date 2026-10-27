@@ -365,8 +365,7 @@
             </p>
             <p id="texto-pases" style="font-family: 'Montserrat', sans-serif; font-size: 0.9rem; font-weight: 600; color: var(--mostaza); margin-bottom: 20px;"></p>
             
-            <form name="confirmacion-boda" id="form-boda" method="POST" data-netlify="true" class="formulario-boda">
-                <input type="hidden" name="form-name" value="confirmacion-boda">
+            <form name="confirmacion-boda" id="form-boda" class="formulario-boda"></form>
                 
                 <!-- 1. Nombre principal -->
                 <input type="text" name="nombre_principal" id="nombre_principal" placeholder="Tu nombre y apellido" required>
@@ -561,22 +560,25 @@
             }
         }
 
-        // Capturar el envío del formulario mediante AJAX
+        // Capturar el envío del formulario mediante AJAX a Google Sheets
         const miFormulario = document.getElementById("form-boda");
 
         if (miFormulario) {
             miFormulario.addEventListener("submit", function(e) {
-                e.preventDefault(); // Evita que la página se recargue o se quede en blanco
+                e.preventDefault(); // Evita que la página se recargue
 
                 const btnSubmit = document.getElementById("btn-enviar-submit");
                 btnSubmit.innerText = "ENVIANDO...";
                 btnSubmit.disabled = true;
 
                 const formData = new FormData(miFormulario);
+                
+                // TU ENLACE DE GOOGLE APPS SCRIPT:
+                const scriptURL = "https://script.google.com/macros/s/AKfycbyMCo9UUa2gS4HbuTjism19nufW74z1l3MaHACOsZqVKM3byeFF_1LpMsv41Tj9tz_k/exec";
 
-                // Enviar datos en segundo plano a Netlify
-                fetch("/", {
+                fetch(scriptURL, {
                     method: "POST",
+                    mode: "no-cors", // VITAL: Evita bloqueos de seguridad del navegador
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
                     body: new URLSearchParams(formData).toString()
                 })
