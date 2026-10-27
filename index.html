@@ -366,27 +366,30 @@
             <p id="texto-pases" style="font-family: 'Montserrat', sans-serif; font-size: 0.9rem; font-weight: 600; color: var(--mostaza); margin-bottom: 20px;"></p>
             
             <form name="confirmacion-boda" method="POST" data-netlify="true" class="formulario-boda">
+                
+                <!-- 1. Nombre de la persona principal (Siempre visible) -->
+                <input type="text" name="nombre_principal" placeholder="Tu nombre y apellido" required>
+                
                 <input type="tel" name="whatsapp" placeholder="Tu número de WhatsApp" required>
                 
+                <!-- 2. Pregunta de asistencia -->
                 <select name="asistencia" id="select-asistencia" required onchange="togglePases()">
                     <option value="" disabled selected>¿Podrás acompañarnos?</option>
-                    <option value="Si">¡Sí, ahí estaremos!</option>
+                    <option value="Si">¡Sí, ahí estaré!</option>
                     <option value="No">Lo siento mucho, no podré asistir</option>
                 </select>
 
-                <!-- Agregamos onchange="generarCamposNombres()" -->
+                <!-- 3. Se muestra solo si dice que "Sí" y tiene más de 1 pase -->
                 <select name="numero_asistentes" id="select-personas" style="display:none;" onchange="generarCamposNombres()">
                     <option value="" disabled selected>¿Cuántos asistirán en total?</option>
                 </select>
 
-                <!-- Contenedor de nombres oculto por defecto -->
+                <!-- 4. Contenedor de nombres de acompañantes oculto por defecto -->
                 <div id="contenedor-nombres" style="display: none; width: 100%;">
-                    <!-- 5 inputs pre-creados para que Netlify los detecte en el servidor -->
-                    <input type="text" name="persona_1" id="persona_1" placeholder="Nombre persona 1" style="display:none; margin-top: 15px;">
-                    <input type="text" name="persona_2" id="persona_2" placeholder="Nombre persona 2" style="display:none; margin-top: 15px;">
-                    <input type="text" name="persona_3" id="persona_3" placeholder="Nombre persona 3" style="display:none; margin-top: 15px;">
-                    <input type="text" name="persona_4" id="persona_4" placeholder="Nombre persona 4" style="display:none; margin-top: 15px;">
-                    <input type="text" name="persona_5" id="persona_5" placeholder="Nombre persona 5" style="display:none; margin-top: 15px;">
+                    <input type="text" name="persona_2" id="persona_2" placeholder="Nombre del acompañante 1" style="display:none; margin-top: 15px;">
+                    <input type="text" name="persona_3" id="persona_3" placeholder="Nombre del acompañante 2" style="display:none; margin-top: 15px;">
+                    <input type="text" name="persona_4" id="persona_4" placeholder="Nombre del acompañante 3" style="display:none; margin-top: 15px;">
+                    <input type="text" name="persona_5" id="persona_5" placeholder="Nombre del acompañante 4" style="display:none; margin-top: 15px;">
                 </div>
 
                 <button type="submit" class="btn-enviar">ENVIAR CONFIRMACIÓN</button>
@@ -470,70 +473,91 @@
             document.getElementById('contenedor-formulario').style.display = 'block';
         }
 
-        // 2. Lógica para leer los pases desde el link (ej: ?pases=3)
+        // Variable global para saber cuántos pases tiene
+        let pasesAsignados = 1;
+
+        // 1. Lógica para leer los pases desde el link (ej: ?pases=3)
         document.addEventListener("DOMContentLoaded", () => {
             const urlParams = new URLSearchParams(window.location.search);
-            // Si el link no tiene parámetro, le da 2 pases por defecto para que no se rompa
-            let pases = parseInt(urlParams.get('pases')) || 2; 
+            pasesAsignados = parseInt(urlParams.get('pases')) || 2; 
             
             const selectPersonas = document.getElementById("select-personas");
             const textoPases = document.getElementById("texto-pases");
 
-            // Personaliza el mensaje de los boletos
-            textoPases.innerHTML = `Tienes reservado(s) ${pases} pase(s) para este evento.`;
+            textoPases.innerHTML = `Tienes reservado(s) ${pasesAsignados} pase(s) para este evento.`;
 
-            // Crea las opciones del dropdown según el número máximo
-            for (let i = 1; i <= pases; i++) {
+            // Crea las opciones del dropdown
+            for (let i = 1; i <= pasesAsignados; i++) {
                 let option = document.createElement("option");
                 option.value = i;
-                option.text = i === 1 ? "1 persona (Solo yo)" : `${i} personas`;
+                option.text = i === 1 ? "Solo yo" : `${i} personas en total`;
                 selectPersonas.appendChild(option);
             }
         });
 
-        // Mostrar/ocultar cantidad de personas y reiniciar nombres si dicen que NO asisten
+        // 2. Mostrar cantidad de personas si dicen que SÍ asisten
         function togglePases() {
             const asistencia = document.getElementById("select-asistencia").value;
             const selectPersonas = document.getElementById("select-personas");
             const contenedorNombres = document.getElementById("contenedor-nombres");
             
             if(asistencia === "Si") {
-                selectPersonas.style.display = "block";
-                selectPersonas.required = true;
+                if(pasesAsignados > 1) {
+                    selectPersonas.style.display = "block";
+                    selectPersonas.required = true;
+                } else {
+                    // Si solo tiene 1 pase, se asume 1 y no se pregunta cuántos van
+                    selectPersonas.style.display = "none";
+                    selectPersonas.required = false;
+                    selectPersonas.value = "1";
+                }
             } else {
                 selectPersonas.style.display = "none";
                 selectPersonas.required = false;
                 selectPersonas.value = ""; 
                 contenedorNombres.style.display = "none"; 
                 
-                for (let i = 1; i <= 5; i++) {
+                // Borrar campos si cambian de opinión
+                for (let i = 2; i <= 5; i++) {
                     let input = document.getElementById("persona_" + i);
-                    input.required = false;
-                    input.value = "";
+                    if(input) {
+                        input.required = false;
+                        input.value = "";
+                    }
                 }
             }
         }
 
-        // Mostrar exactamente la cantidad de casillas de texto que seleccionaron
+        // 3. Mostrar campos de texto para acompañantes (empieza a contar desde el 2)
         function generarCamposNombres() {
             const cantidad = parseInt(document.getElementById("select-personas").value);
             const contenedor = document.getElementById("contenedor-nombres");
             
-            if(cantidad > 0) {
+            if(cantidad > 1) {
                 contenedor.style.display = "block";
+            } else {
+                contenedor.style.display = "none";
             }
 
-            for (let i = 1; i <= 5; i++) {
+            for (let i = 2; i <= 5; i++) {
                 const inputElement = document.getElementById("persona_" + i);
-                if (i <= cantidad) {
-                    inputElement.style.display = "block";
-                    inputElement.required = true; // Obliga a que no lo dejen en blanco
-                } else {
-                    inputElement.style.display = "none";
-                    inputElement.required = false;
-                    inputElement.value = ""; // Borra el texto por si reducen el número
+                if(inputElement) {
+                    if (i <= cantidad) {
+                        inputElement.style.display = "block";
+                        inputElement.required = true;
+                    } else {
+                        inputElement.style.display = "none";
+                        inputElement.required = false;
+                        inputElement.value = ""; 
+                    }
                 }
             }
+        }
+
+        // Función para el botón inicial que muestra el formulario
+        function mostrarFormulario() {
+            document.getElementById('btn-mostrar-form').style.display = 'none';
+            document.getElementById('contenedor-formulario').style.display = 'block';
         }
     </script>
 </body>
