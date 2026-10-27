@@ -225,6 +225,62 @@
             color: #d1d1d1;
         }
 
+        /* --- FORMULARIO RSVP --- */
+        .seccion-rsvp {
+            background-color: var(--bg-crema);
+            padding: 60px 20px;
+            color: var(--color-texto);
+        }
+
+        .formulario-boda {
+            max-width: 400px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .formulario-boda input, 
+        .formulario-boda select {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid var(--mostaza);
+            background-color: transparent;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            color: var(--color-texto);
+            box-sizing: border-box;
+            border-radius: 5px;
+            transition: border-color 0.3s ease;
+        }
+
+        .formulario-boda input:focus, 
+        .formulario-boda select:focus {
+            outline: none;
+            border-color: var(--terracota);
+            background-color: white;
+        }
+
+        .btn-enviar {
+            background-color: var(--verde-oscuro);
+            color: var(--bg-crema);
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 2px;
+            border-radius: 30px;
+            margin-top: 15px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .btn-enviar:hover {
+            transform: scale(1.05);
+            background-color: var(--terracota);
+        }
+
         /* --- ADAPTACIÓN PARA MÓVILES --- */
         @media (max-width: 600px) {
             /* Ajusta el tamaño de la tipografía principal */
@@ -293,6 +349,49 @@
             <div class="timer-box"><span id="seg">00</span><small>Seg</small></div>
         </div>
         <div class="aviso">La invitación formal y los detalles del evento serán enviados más adelante.</div>
+    </div>
+
+    <!-- SECCIÓN DE CONFIRMACIÓN (RSVP) -->
+    <div class="seccion-rsvp">
+        <h2 class="nombres-script" style="font-size: 3.5rem; color: var(--terracota); margin-bottom: 10px;">RSVP</h2>
+        
+        <!-- Botón inicial que se oculta al darle click -->
+        <button id="btn-mostrar-form" class="btn-enviar" onclick="mostrarFormulario()">CONFIRMAR ASISTENCIA</button>
+        
+        <!-- Contenedor del formulario oculto por defecto (display: none) -->
+        <div id="contenedor-formulario" style="display: none; margin-top: 30px;">
+            <p style="font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; margin-bottom: 10px;">
+                Nos encantaría contar con tu presencia.
+            </p>
+            <p id="texto-pases" style="font-family: 'Montserrat', sans-serif; font-size: 0.9rem; font-weight: 600; color: var(--mostaza); margin-bottom: 20px;"></p>
+            
+            <form name="confirmacion-boda" method="POST" data-netlify="true" class="formulario-boda">
+                <input type="tel" name="whatsapp" placeholder="Tu número de WhatsApp" required>
+                
+                <select name="asistencia" id="select-asistencia" required onchange="togglePases()">
+                    <option value="" disabled selected>¿Podrás acompañarnos?</option>
+                    <option value="Si">¡Sí, ahí estaremos!</option>
+                    <option value="No">Lo siento mucho, no podré asistir</option>
+                </select>
+
+                <!-- Agregamos onchange="generarCamposNombres()" -->
+                <select name="numero_asistentes" id="select-personas" style="display:none;" onchange="generarCamposNombres()">
+                    <option value="" disabled selected>¿Cuántos asistirán en total?</option>
+                </select>
+
+                <!-- Contenedor de nombres oculto por defecto -->
+                <div id="contenedor-nombres" style="display: none; width: 100%;">
+                    <!-- 5 inputs pre-creados para que Netlify los detecte en el servidor -->
+                    <input type="text" name="persona_1" id="persona_1" placeholder="Nombre persona 1" style="display:none; margin-top: 15px;">
+                    <input type="text" name="persona_2" id="persona_2" placeholder="Nombre persona 2" style="display:none; margin-top: 15px;">
+                    <input type="text" name="persona_3" id="persona_3" placeholder="Nombre persona 3" style="display:none; margin-top: 15px;">
+                    <input type="text" name="persona_4" id="persona_4" placeholder="Nombre persona 4" style="display:none; margin-top: 15px;">
+                    <input type="text" name="persona_5" id="persona_5" placeholder="Nombre persona 5" style="display:none; margin-top: 15px;">
+                </div>
+
+                <button type="submit" class="btn-enviar">ENVIAR CONFIRMACIÓN</button>
+            </form>
+        </div>
     </div>
 
     <script>
@@ -364,6 +463,78 @@
                 videoActivo.webkitRequestFullscreen(); // Safari PC
             }
         });
+
+        // 1. Función para mostrar el formulario
+        function mostrarFormulario() {
+            document.getElementById('btn-mostrar-form').style.display = 'none';
+            document.getElementById('contenedor-formulario').style.display = 'block';
+        }
+
+        // 2. Lógica para leer los pases desde el link (ej: ?pases=3)
+        document.addEventListener("DOMContentLoaded", () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            // Si el link no tiene parámetro, le da 2 pases por defecto para que no se rompa
+            let pases = parseInt(urlParams.get('pases')) || 2; 
+            
+            const selectPersonas = document.getElementById("select-personas");
+            const textoPases = document.getElementById("texto-pases");
+
+            // Personaliza el mensaje de los boletos
+            textoPases.innerHTML = `Tienes reservado(s) ${pases} pase(s) para este evento.`;
+
+            // Crea las opciones del dropdown según el número máximo
+            for (let i = 1; i <= pases; i++) {
+                let option = document.createElement("option");
+                option.value = i;
+                option.text = i === 1 ? "1 persona (Solo yo)" : `${i} personas`;
+                selectPersonas.appendChild(option);
+            }
+        });
+
+        // Mostrar/ocultar cantidad de personas y reiniciar nombres si dicen que NO asisten
+        function togglePases() {
+            const asistencia = document.getElementById("select-asistencia").value;
+            const selectPersonas = document.getElementById("select-personas");
+            const contenedorNombres = document.getElementById("contenedor-nombres");
+            
+            if(asistencia === "Si") {
+                selectPersonas.style.display = "block";
+                selectPersonas.required = true;
+            } else {
+                selectPersonas.style.display = "none";
+                selectPersonas.required = false;
+                selectPersonas.value = ""; 
+                contenedorNombres.style.display = "none"; 
+                
+                for (let i = 1; i <= 5; i++) {
+                    let input = document.getElementById("persona_" + i);
+                    input.required = false;
+                    input.value = "";
+                }
+            }
+        }
+
+        // Mostrar exactamente la cantidad de casillas de texto que seleccionaron
+        function generarCamposNombres() {
+            const cantidad = parseInt(document.getElementById("select-personas").value);
+            const contenedor = document.getElementById("contenedor-nombres");
+            
+            if(cantidad > 0) {
+                contenedor.style.display = "block";
+            }
+
+            for (let i = 1; i <= 5; i++) {
+                const inputElement = document.getElementById("persona_" + i);
+                if (i <= cantidad) {
+                    inputElement.style.display = "block";
+                    inputElement.required = true; // Obliga a que no lo dejen en blanco
+                } else {
+                    inputElement.style.display = "none";
+                    inputElement.required = false;
+                    inputElement.value = ""; // Borra el texto por si reducen el número
+                }
+            }
+        }
     </script>
 </body>
 </html>
