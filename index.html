@@ -365,7 +365,8 @@
             </p>
             <p id="texto-pases" style="font-family: 'Montserrat', sans-serif; font-size: 0.9rem; font-weight: 600; color: var(--mostaza); margin-bottom: 20px;"></p>
             
-            <form name="confirmacion-boda" id="form-boda" class="formulario-boda"></form>
+            <!-- FORMULARIO LIMPIO Y CON DISEÑO -->
+            <form name="confirmacion-boda" id="form-boda" class="formulario-boda">
                 
                 <!-- 1. Nombre principal -->
                 <input type="text" name="nombre_principal" id="nombre_principal" placeholder="Tu nombre y apellido" required>
@@ -384,12 +385,12 @@
                     <option value="" disabled selected>¿Cuántos asistirán en total?</option>
                 </select>
 
-                <!-- 4. Acompañantes -->
-                <div id="contenedor-nombres" style="display: none; width: 100%;">
-                    <input type="text" name="persona_2" id="persona_2" placeholder="Nombre del acompañante 1" style="display:none; margin-top: 15px;">
-                    <input type="text" name="persona_3" id="persona_3" placeholder="Nombre del acompañante 2" style="display:none; margin-top: 15px;">
-                    <input type="text" name="persona_4" id="persona_4" placeholder="Nombre del acompañante 3" style="display:none; margin-top: 15px;">
-                    <input type="text" name="persona_5" id="persona_5" placeholder="Nombre del acompañante 4" style="display:none; margin-top: 15px;">
+                <!-- 4. Acompañantes (agrupados en columna para mantener el diseño) -->
+                <div id="contenedor-nombres" style="display: none; width: 100%; display: flex; flex-direction: column; gap: 15px; margin-top: 15px;">
+                    <input type="text" name="persona_2" id="persona_2" placeholder="Nombre del acompañante 1" style="display:none;">
+                    <input type="text" name="persona_3" id="persona_3" placeholder="Nombre del acompañante 2" style="display:none;">
+                    <input type="text" name="persona_4" id="persona_4" placeholder="Nombre del acompañante 3" style="display:none;">
+                    <input type="text" name="persona_5" id="persona_5" placeholder="Nombre del acompañante 4" style="display:none;">
                 </div>
 
                 <button type="submit" id="btn-enviar-submit" class="btn-enviar">ENVIAR CONFIRMACIÓN</button>
