@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta property="og:title" content="Save the Date | Alexander & Valery">
     <meta property="og:description" content="05 de Diciembre 2026. ¡Reserva la fecha!">
-    <meta property="og:image" content="https://franciscoj04.github.io/Valery-Alex/fotogrande.jpeg">
-    <meta property="og:url" content="https://franciscoj04.github.io/Valery-Alex/">
+    <meta property="og:image" content="https://valery-alex.netlify.app/fotogrande.jpeg">
+    <meta property="og:url" content="https://valery-alex.netlify.app/">
     <meta property="og:type" content="website">
     <title>Save the Date | Alexander & Valery</title>
 
@@ -366,6 +366,7 @@
             <p id="texto-pases" style="font-family: 'Montserrat', sans-serif; font-size: 0.9rem; font-weight: 600; color: var(--mostaza); margin-bottom: 20px;"></p>
             
             <form name="confirmacion-boda" id="form-boda" method="POST" data-netlify="true" class="formulario-boda">
+                <input type="hidden" name="form-name" value="confirmacion-boda">
                 
                 <!-- 1. Nombre principal -->
                 <input type="text" name="nombre_principal" id="nombre_principal" placeholder="Tu nombre y apellido" required>
@@ -560,12 +561,6 @@
             }
         }
 
-        // Función para el botón inicial que muestra el formulario
-        function mostrarFormulario() {
-            document.getElementById('btn-mostrar-form').style.display = 'none';
-            document.getElementById('contenedor-formulario').style.display = 'block';
-        }
-
         // Capturar el envío del formulario mediante AJAX
         const miFormulario = document.getElementById("form-boda");
 
@@ -582,7 +577,7 @@
                 // Enviar datos en segundo plano a Netlify
                 fetch("/", {
                     method: "POST",
-                    headers: { "Content-Type": "application/x-www-form-parse-urlencoded" },
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
                     body: new URLSearchParams(formData).toString()
                 })
                 .then(() => {
